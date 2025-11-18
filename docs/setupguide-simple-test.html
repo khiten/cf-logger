@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cf-logger レンタルサーバー用セットアップガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            background-color: #ffffff;
+            padding: 16px;
+        }
+        
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2em;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        
+        h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #24292e;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            padding-top: 24px;
+            border-top: 1px solid #e1e4e8;
+        }
+        
+        h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: #24292e;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+        
+        h4 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #24292e;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+        
+        p {
+            margin-bottom: 16px;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+        
+        ul, ol {
+            margin-left: 32px;
+            margin-bottom: 16px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        
+        code {
+            background-color: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 1.05em;
+            color: #24292e;
+        }
+        
+        pre {
+            background-color: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin-bottom: 16px;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 1.1em;
+            line-height: 1.45;
+            color: #24292e;
+        }
+        
+        pre code {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 1.05em;
+        }
+        
+        table th {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d5da;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table td {
+            border: 1px solid #d1d5da;
+            padding: 12px;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #f6f8fa;
+        }
+        
+        .box {
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+        
+        .box-info {
+            background-color: #f1f8ff;
+            border-color: #0366d6;
+            border-left: 4px solid #0366d6;
+        }
+        
+        .box-warning {
+            background-color: #fff8c5;
+            border-color: #ffc107;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .box-success {
+            background-color: #f0fdf4;
+            border-color: #28a745;
+            border-left: 4px solid #28a745;
+        }
+        
+        .box strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .toc {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .toc li {
+            margin-bottom: 8px;
+        }
+        
+        .toc a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 1.05em;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        .version-info {
+            color: #586069;
+            font-size: 1em;
+            margin-bottom: 24px;
+        }
+        
+        .step {
+            background-color: #f6f8fa;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .step h4 {
+            margin-top: 0;
+        }
+        
+        .screenshot-note {
+            font-size: 0.95em;
+            color: #586069;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #e1e4e8;
+            color: #586069;
+            text-align: center;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📁 cf-logger レンタルサーバー用セットアップガイド</h1>
+        <div class="version-info">
+            <strong>対象:</strong> さくらのレンタルサーバー、Xserver、JETBOY、ロリポップ等 | <strong>Version:</strong> 1.0.0 | <strong>Last Updated:</strong> 2025-11-18
+        </div>
+        
+        <p><strong>このガイドは、SSH/ターミナルを使わずに、ファイルマネージャーだけで cf-logger をセットアップできるノンプログラマ向けの手順です。</strong></p>
+        
+        <div class="box box-info">
+            <strong>ℹ 対象レンタルサーバー</strong>
+            このガイドは以下のレンタルサーバーに対応しています：
+            <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>さくらのレンタルサーバー</li>
+                <li>Xserver（エックスサーバー）</li>
+                <li>JETBOY</li>
+                <li>ロリポップ！</li>
+                <li>その他の共有レンタルサーバー</li>
+            </ul>
+        </div>
+        
+        <div class="toc">
+            <h3>📑 目次</h3>
+            <ul>
+                <li><a href="#preparation">準備</a></li>
+                <li><a href="#download">ファイルダウンロード</a></li>
+                <li><a href="#upload">ファイルアップロード</a></li>
+                <li><a href="#permissions">パーミッション設定</a></li>
+                <li><a href="#config">設定ファイル編集</a></li>
+                <li><a href="#verify">動作確認</a></li>
+                <li><a href="#wordpress">WordPress への組込</a></li>
+                <li><a href="#troubleshoot">トラブルシューティング</a></li>
+            </ul>
+        </div>
+        
+        <h2 id="preparation">準備</h2>
+        
+        <h3>必要なもの</h3>
+        <ul>
+            <li>✓ レンタルサーバーのコントロールパネル（管理画面）にログインできること</li>
+            <li>✓ ファイルマネージャー または FTP クライアント（FileZilla 等）</li>
+            <li>✓ テキストエディタ（Windows: メモ帳、Mac: TextEdit 等）</li>
+            <li>✓ Webブラウザ</li>
+        </ul>
+        
+        <h3>PHP バージョン確認</h3>
+        <p>レンタルサーバーのコントロールパネルで PHP バージョンを確認してください。</p>
+        <ul>
+            <li><strong>さくらのレンタルサーバー:</strong> コントロールパネル → 環境設定 → PHP設定</li>
+            <li><strong>Xserver:</strong> サーバーパネル → PHPバージョン設定</li>
+            <li><strong>ロリポップ：</strong> ユーザー専用ページ → サーバー設定 → PHPバージョン</li>
+        </ul>
+        
+        <div class="box box-success">
+            <strong>✓ PHP 7.0以上であれば対応可能です。</strong>
+        </div>
+        
+        <h2 id="download">ファイルダウンロード</h2>
+        
+        <div class="step">
+            <h4>ステップ1: cf-logger をダウンロード</h4>
+            
+            <ol>
+                <li>Web ブラウザで以下にアクセス:<br>
+                    <code>https://github.com/khiten/cf-logger</code></li>
+                <li>緑色の「Code」ボタンをクリック</li>
+                <li>「Download ZIP」をクリック</li>
+                <li>ZIP ファイルがダウンロードされます（ファイル名: <code>cf-logger-main.zip</code> など）</li>
+            </ol>
+            
+            <p class="screenshot-note">※ ダウンロード完了後、ZIP ファイルを右クリック → 「すべて展開」で解凍してください（Windows）。Mac の場合は自動解凍されます。</p>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ2: フォルダ構成を確認</h4>
+            
+            <p>解凍後、以下のような構成になっていることを確認：</p>
+            <pre>cf-logger-main/  (または cf-logger/)
+├── config.php
+├── cf-logger.php
+├── README.md
+├── src/
+│   └── Logger.php
+├── languages/
+│   └── ja.php
+└── logs/  (この時点では無いかもしれません)</pre>
+        </div>
+        
+        <h2 id="upload">ファイルアップロード</h2>
+        
+        <h3>ファイルマネージャーを使用する場合</h3>
+        
+        <div class="step">
+            <h4>ステップ1: ファイルマネージャーを開く</h4>
+            
+            <ol>
+                <li>レンタルサーバーのコントロールパネルにログイン</li>
+                <li>ファイルマネージャーを開く
+                    <ul>
+                        <li>さくらのレンタルサーバー: コントロールパネル → ファイルマネージャー</li>
+                        <li>Xserver: サーバーパネル → ファイルマネージャー</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ2: Web 公開フォルダに移動</h4>
+            
+            <p>通常、以下のフォルダが Web 公開フォルダです：</p>
+            <ul>
+                <li>さくらのレンタルサーバー: <code>www/</code> または <code>public_html/</code></li>
+                <li>Xserver: <code>public_html/</code></li>
+                <li>ロリポップ: <code>public_html/</code></li>
+            </ul>
+            
+            <p>このフォルダを開いてください。</p>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ3: cf-logger フォルダを新規作成</h4>
+            
+            <ol>
+                <li>ファイルマネージャー画面で「新規フォルダ作成」をクリック</li>
+                <li>フォルダ名: <code>cf-logger</code> と入力</li>
+                <li>作成ボタンをクリック</li>
+            </ol>
+            
+            <p class="screenshot-note">※ ご自身のサイトトップ直下に <code>cf-logger</code> というフォルダが作成されます。</p>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ4: cf-logger フォルダ内にファイルをアップロード</h4>
+            
+            <ol>
+                <li>先ほど作成した <code>cf-logger</code> フォルダをダブルクリックで開く</li>
+                <li>ファイルマネージャーの「アップロード」ボタンをクリック</li>
+                <li>ダウンロードした ZIP から解凍した以下のファイルを選択してアップロード:
+                    <ul>
+                        <li><code>config.php</code></li>
+                        <li><code>cf-logger.php</code></li>
+                        <li><code>README.md</code></li>
+                        <li><code>src/</code> フォルダ全体</li>
+                        <li><code>languages/</code> フォルダ全体</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p class="screenshot-note">※ 複数ファイルは一度に選択してアップロードできます。Ctrl キーを押しながらクリックで複数選択。</p>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ5: logs フォルダを作成</h4>
+            
+            <ol>
+                <li><code>cf-logger</code> フォルダ内で「新規フォルダ作成」をクリック</li>
+                <li>フォルダ名: <code>logs</code> と入力</li>
+                <li>作成ボタンをクリック</li>
+            </ol>
+        </div>
+        
+        <h3>FTP クライアント（FileZilla 等）を使用する場合</h3>
+        
+        <div class="step">
+            <h4>FTP 接続情報を確認</h4>
+            
+            <p>レンタルサーバーのコントロールパネルから FTP ログイン情報を確認：</p>
+            <ul>
+                <li>FTP サーバー（ホスト名）</li>
+                <li>FTP ユーザー名</li>
+                <li>FTP パスワード</li>
+                <li>FTP ポート（通常 21）</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h4>FileZilla で接続</h4>
+            
+            <ol>
+                <li>FileZilla を起動</li>
+                <li>メニュー: ファイル → サイトマネージャー</li>
+                <li>「新しいサイト」をクリック</li>
+                <li>以下を入力:
+                    <ul>
+                        <li>プロトコル: FTP</li>
+                        <li>ホスト: 上記で確認した FTP サーバー</li>
+                        <li>ユーザー: 上記で確認した FTP ユーザー名</li>
+                        <li>パスワード: 上記で確認した FTP パスワード</li>
+                    </ul>
+                </li>
+                <li>「接続」をクリック</li>
+            </ol>
+            
+            <p>接続後、Web 公開フォルダ（<code>public_html/</code> 等）に <code>cf-logger</code> フォルダをアップロードします。</p>
+        </div>
+        
+        <h2 id="permissions">パーミッション設定</h2>
+        
+        <h3>logs フォルダのパーミッション設定</h3>
+        
+        <div class="step">
+            <h4>ファイルマネージャーでの設定</h4>
+            
+            <ol>
+                <li><code>cf-logger/logs</code> フォルダを右クリック</li>
+                <li>「属性」または「パーミッション」を選択</li>
+                <li>以下の権限を設定:
+                    <ul>
+                        <li>オーナー（所有者）: 読み取り、書き込み、実行 ✓</li>
+                        <li>グループ: 読み取り、実行 ✓</li>
+                        <li>その他: 読み取り、実行 ✓</li>
+                    </ul>
+                </li>
+                <li>「OK」または「適用」をクリック</li>
+            </ol>
+            
+            <p class="screenshot-note">※ 数値で表すと <code>755</code> です。レンタルサーバーによっては自動で設定されることもあります。</p>
+        </div>
+        
+        <h2 id="config">設定ファイル編集</h2>
+        
+        <div class="step">
+            <h4>ステップ1: ファイルマネージャーで config.php を編集</h4>
+            
+            <ol>
+                <li>ファイルマネージャーで <code>cf-logger/config.php</code> を選択</li>
+                <li>右クリック → 「編集」を選択（または「ダウンロード」してテキストエディタで開く）</li>
+                <li>以下の設定を確認:
+                    <pre>define('LOG_FORMAT_TYPE', 'simple');
+define('LOG_DATE_FORMAT', 'Y/m/d H:i:s');
+define('LOG_STATUS_ENABLED', true);
+define('LOG_DIRECTORY', 'logs');
+define('LOG_FILE_TYPE', 'rotate');
+define('LOG_DIRECTORY_MODE', 'yeardir');
+define('LOG_LANGUAGE', 'ja');</pre>
+                </li>
+                <li>必要に応じて変更（初心者は「デフォルト値」のままでOK）</li>
+                <li>保存</li>
+            </ol>
+            
+            <p class="screenshot-note">※ デフォルト値は一般的な設定で、ほとんどの環境で動作します。</p>
+        </div>
+        
+        <h3>ノンプログラマ向け: 設定値の簡単説明</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>設定名</th>
+                    <th>意味</th>
+                    <th>デフォルト値</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>LOG_FORMAT_TYPE</code></td>
+                    <td>ログをどの形式で保存するか</td>
+                    <td><code>simple</code>（シンプル形式）</td>
+                </tr>
+                <tr>
+                    <td><code>LOG_DATE_FORMAT</code></td>
+                    <td>日付の表記方法</td>
+                    <td><code>Y/m/d H:i:s</code>（例: 2025/11/18 17:30:45）</td>
+                </tr>
+                <tr>
+                    <td><code>LOG_STATUS_ENABLED</code></td>
+                    <td>HTTP ステータス（200, 404等）をログに記録するか</td>
+                    <td><code>true</code>（記録する）</td>
+                </tr>
+                <tr>
+                    <td><code>LOG_DIRECTORY</code></td>
+                    <td>ログを保存するフォルダ</td>
+                    <td><code>logs</code></td>
+                </tr>
+                <tr>
+                    <td><code>LOG_FILE_TYPE</code></td>
+                    <td>ログを日ごとに分割するか</td>
+                    <td><code>rotate</code>（日ごとに分割）</td>
+                </tr>
+                <tr>
+                    <td><code>LOG_LANGUAGE</code></td>
+                    <td>エラーメッセージの言語</td>
+                    <td><code>ja</code>（日本語）</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2 id="verify">動作確認</h2>
+        
+        <div class="step">
+            <h4>ステップ1: テストページを作成</h4>
+            
+            <ol>
+                <li>サイトの <code>header.php</code> または <code>template.php</code> などの共通ファイルを開く</li>
+                <li>ファイルの最初に以下を追加:
+                    <pre>&lt;?php
+require_once __DIR__ . '/cf-logger/cf-logger.php';
+?&gt;</pre>
+                </li>
+                <li>保存</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ2: Web ブラウザでサイトにアクセス</h4>
+            
+            <ol>
+                <li>ご自身のサイトをブラウザで開く</li>
+                <li>ページが正常に表示されることを確認</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ3: ログファイルを確認</h4>
+            
+            <ol>
+                <li>ファイルマネージャーで <code>cf-logger/logs/</code> フォルダを開く</li>
+                <li>日付ごとのフォルダ（例: <code>2025/11/</code>）が作成されているか確認</li>
+                <li>その中に <code>cf_access_20251118.log</code> のようなファイルがあるか確認</li>
+                <li>ファイルをダウンロードして内容を確認
+                    <pre>2025/11/18 17:30:45 127.0.0.1 PC Chrome/142.0.0.0 GET /index.php 200</pre>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="box box-success">
+            <strong>✓ ログが記録されていれば成功です！</strong>
+        </div>
+        
+        <h2 id="wordpress">WordPress への組込</h2>
+        
+        <h3>WordPress がインストールされている場合</h3>
+        
+        <div class="step">
+            <h4>ステップ1: テーマの functions.php を編集</h4>
+            
+            <ol>
+                <li>ファイルマネージャーで <code>wp-content/themes/ご使用のテーマ名/functions.php</code> を開く</li>
+                <li>ファイルの最初（一番上）に以下を追加:
+                    <pre>&lt;?php
+require_once __DIR__ . '/../../cf-logger/cf-logger.php';
+?&gt;</pre>
+                </li>
+                <li>保存</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h4>ステップ2: WordPress サイトにアクセスして確認</h4>
+            
+            <ol>
+                <li>WordPress ブログにアクセス</li>
+                <li>ページが正常に表示されることを確認</li>
+                <li>ファイルマネージャーで <code>cf-logger/logs/</code> を確認</li>
+                <li>ログが記録されているか確認</li>
+            </ol>
+        </div>
+        
+        <h2 id="troubleshoot">トラブルシューティング</h2>
+        
+        <h3>【問題】ログが記録されない</h3>
+        
+        <div class="box box-warning">
+            <strong>⚠ よくある原因と対処法</strong>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>原因</th>
+                    <th>確認方法</th>
+                    <th>対処法</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>logs</code> フォルダが存在しない</td>
+                    <td>ファイルマネージャーで <code>cf-logger/</code> を確認</td>
+                    <td>上記「パーミッション設定」の「logs フォルダを作成」を実行</td>
+                </tr>
+                <tr>
+                    <td><code>logs</code> フォルダの パーミッションが間違っている</td>
+                    <td>ファイルマネージャーで右クリック → 属性</td>
+                    <td>「書き込み」権限を有効（チェック）にする</td>
+                </tr>
+                <tr>
+                    <td>ファイルアップロードが不完全</td>
+                    <td>ファイルマネージャーで <code>cf-logger/</code> 内のファイル一覧</td>
+                    <td>上記「ファイルアップロード」を再度実行</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>【問題】サイトが真っ白になった（エラー画面）</h3>
+        
+        <div class="box box-warning">
+            <strong>⚠ 対処法</strong>
+        </div>
+        
+        <ol>
+            <li>ファイルマネージャーで編集したファイル（header.php や functions.php）を開く</li>
+            <li>追加した行を確認:
+                <pre>&lt;?php
+require_once __DIR__ . '/cf-logger/cf-logger.php';
+?&gt;</pre>
+                この行が正しく入っているか確認
+            </li>
+            <li>パスが間違っていないか確認（フォルダ構造に合わせて `../` の数を調整）</li>
+            <li>構文が正しいか確認（`<?php` と `?>` が揃っているか）</li>
+            <li>修正して保存</li>
+            <li>ブラウザをリロード（F5 キーを押す）</li>
+        </ol>
+        
+        <div class="box box-info">
+            <strong>ℹ 最後の手段</strong>
+            追加した行を削除すれば、サイトは元に戻ります。その上で、セットアップを最初からやり直してください。
+        </div>
+        
+        <h3>【問題】ログファイルが表示されない</h3>
+        
+        <ol>
+            <li>ブラウザのキャッシュをクリア（Ctrl+Shift+Delete キー、またはブラウザ設定から）</li>
+            <li>ファイルマネージャーをリロード（ブラウザをリロード）</li>
+            <li>ログが作成されるまで 1〜2 分待つ</li>
+            <li>それでも表示されない場合は、エラーログを確認:
+                <ul>
+                    <li>レンタルサーバーのコントロールパネル → ログ → エラーログ</li>
+                    <li>PHP エラーが出ていないか確認</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <footer>
+            <p><strong>cf-logger レンタルサーバー用セットアップガイド完了！</strong></p>
+            <p>ご不明な点があればお気軽にお問い合わせください。</p>
+            <p style="margin-top: 16px;">
+                <a href="https://github.com/khiten/cf-logger" style="color: #0366d6;">GitHub リポジトリ</a> | 
+                <a href="https://khiten.github.io/cf-logger/" style="color: #0366d6;">ドキュメント</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
